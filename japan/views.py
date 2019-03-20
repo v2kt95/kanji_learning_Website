@@ -53,7 +53,9 @@ def mark_word(request):
     return JsonResponse(data) 
 
 def load_excel_file(request):
-    wb = load_workbook('C://Users//vuongdv3//Desktop//kanji.xlsx')
+    url = os.path.join(BASE_DIR, 'kanji.xlsx')
+    wb = load_workbook(url)
+    # wb = load_workbook('C://Users//vuongdv3//Desktop//kanji.xlsx')
     sheet = wb.get_sheet_by_name('Sheet1')
     # current_kanji = sheet['A2'].value
     i = 2
