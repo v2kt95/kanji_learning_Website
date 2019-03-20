@@ -6,6 +6,7 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 import json
 from openpyxl import load_workbook
+import os
 
 
 def index(request):
@@ -53,6 +54,7 @@ def mark_word(request):
     return JsonResponse(data) 
 
 def load_excel_file(request):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(BASE_DIR, 'kanji.xlsx')
     wb = load_workbook(url)
     # wb = load_workbook('C://Users//vuongdv3//Desktop//kanji.xlsx')
