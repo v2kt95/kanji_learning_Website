@@ -4,3 +4,4 @@ gunicorn==19.9.0
 psycopg2-binary==2.7.7
 whitenoise==4.1.2
 openpyxl==2.5.12
+apscheduler==3.6.0
