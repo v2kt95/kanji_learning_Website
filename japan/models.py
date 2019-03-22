@@ -8,6 +8,7 @@ class Kanji(models.Model):
     kanji = models.CharField(max_length=200)
     kanji_meaning = models.CharField(max_length=200)
     remember_point = models.IntegerField(default=0)
+    strokes = models.IntegerField(default=0)
     def __str__(self):
         return self.kanji
 
