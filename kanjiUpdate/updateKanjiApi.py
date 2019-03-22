@@ -1,4 +1,4 @@
-import request
+# import request
 from japan.models import Kanji,Word
 
 def update_kanji():
