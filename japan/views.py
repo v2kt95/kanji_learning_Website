@@ -7,12 +7,13 @@ from django.forms.models import model_to_dict
 import json
 from openpyxl import load_workbook
 import os
-
+from django.db.models import Avg, Max, Min, Sum
 
 def index(request):
     kanji_list = Kanji.objects.all()
     context = {'kanji_list': kanji_list}
-    print(request.session.get('kanji', False))
+    request.session['average_strokes'] = get_average_strokes()
+    print(request.session['average_strokes'])
     return render(request, 'japan/index.html', context)
 
 def get_word(request):
@@ -21,13 +22,15 @@ def get_word(request):
         priority_list = [1]
     else:
         priority_list = [1,0]
-    print(priority_list)
+    # print(priority_list)
     if request.session.get('kanji', False) == False:
         already_show_kanji = []
-        word = Word.objects.filter(priority__in=priority_list).order_by("?").first()
+        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).order_by("?").first()
+        print(word)
     else:
         already_show_kanji = request.session.get('kanji')
-        word = Word.objects.filter(priority__in=priority_list).exclude(pk__in=already_show_kanji).order_by("?").first()
+        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).exclude(pk__in=already_show_kanji).order_by("?").first()
+        print(word)
     # print(already_show_kanji)
     if word is None:
         data = {'is_empty': True}
@@ -36,6 +39,8 @@ def get_word(request):
         request.session['kanji'] = already_show_kanji
         kanji = word.kanji
         data = {'kanji_meaning': kanji.kanji_meaning, 'kanji': kanji.kanji, 'hiragana_form': word.hiragana_form, 'kanji_form': word.kanji_form, 'meaning_form': word.meaning_form, 'is_empty': False}
+        kanji.remember_point += request.session['average_strokes']
+        kanji.save()
     return JsonResponse(data)
 
 def reset(request):
@@ -48,8 +53,9 @@ def mark_word(request):
     if mark_word is None:
         data = {'result': "failure"}
     else:
-        mark_word.remember_score += 1
-        mark_word.save()
+        kanji = mark_word.kanji
+        kanji.remember_point += request.session['average_strokes']
+        kanji.save()
         data = {'result': "success"}
     return JsonResponse(data) 
 
@@ -76,3 +82,6 @@ def load_excel_file(request):
         i += 1
     return JsonResponse({'result': current_kanji})
 
+def get_average_strokes():
+    kanjis = Kanji.objects.all()
+    return round(kanjis.aggregate(Avg('strokes'))["strokes__avg"])
