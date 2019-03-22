@@ -65,7 +65,7 @@ def load_excel_file(request):
     while sheet['C'+str(i)].value != None:
         if sheet['A'+str(i)].value != None:
             current_kanji = sheet['A'+str(i)].value
-            kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value)
+            kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value,strokes=sheet['F'+str(i)].value)
             kanji.save()
             word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value,priority=1)
             word.save()
