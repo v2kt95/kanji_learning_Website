@@ -54,7 +54,7 @@ def mark_word(request):
         data = {'result': "failure"}
     else:
         kanji = mark_word.kanji
-        kanji.remember_point += request.session['average_strokes']
+        kanji.remember_point -= request.session['average_strokes']
         kanji.save()
         data = {'result': "success"}
     return JsonResponse(data) 
@@ -85,3 +85,27 @@ def load_excel_file(request):
 def get_average_strokes():
     kanjis = Kanji.objects.all()
     return round(kanjis.aggregate(Avg('strokes'))["strokes__avg"])
+
+def get_list_remain_word(request):
+    is_priority_word = request.GET.get('priority', '')
+    if is_priority_word == "true":
+        priority_list = [1]
+    else:
+        priority_list = [1,0]
+
+    if request.session.get('kanji', False) == False:
+        already_show_kanji = []
+        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).values()
+    else:
+        already_show_kanji = request.session.get('kanji')
+        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).exclude(pk__in=already_show_kanji).values()
+    return JsonResponse({'result': list(word)})
+
+def get_list_done_word(request):
+    if request.session.get('kanji', False) == False:
+        already_show_kanji = []
+        word = []
+    else:
+        already_show_kanji = request.session.get('kanji')
+        word = list(Word.objects.filter(pk__in=already_show_kanji).values())
+    return JsonResponse({'result': word})
