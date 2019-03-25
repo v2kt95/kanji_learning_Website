@@ -109,3 +109,8 @@ def get_list_done_word(request):
         already_show_kanji = request.session.get('kanji')
         word = list(Word.objects.filter(pk__in=already_show_kanji).values())
     return JsonResponse({'result': word})
+
+def get_list_old_word(request):
+    word = Kanji.objects.filter(remember_point__lte=-20).values()
+    return JsonResponse({'result': list(word)})
+

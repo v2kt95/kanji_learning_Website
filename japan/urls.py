@@ -11,4 +11,5 @@ urlpatterns = [
     path('load_excel_file', views.load_excel_file, name='load_excel_file'),
     path('get_list_remain_word', views.get_list_remain_word, name='get_list_remain_word'),
     path('get_list_done_word', views.get_list_done_word, name='get_list_done_word'),
+    path('get_list_old_word', views.get_list_old_word, name='get_list_old_word'),
 ]
