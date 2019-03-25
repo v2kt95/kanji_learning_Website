@@ -54,7 +54,7 @@ def mark_word(request):
         data = {'result': "failure"}
     else:
         kanji = mark_word.kanji
-        kanji.remember_point -= request.session['average_strokes']/2
+        kanji.remember_point -= round(request.session['average_strokes']/2)
         kanji.save()
         data = {'result': "success"}
     return JsonResponse(data) 
