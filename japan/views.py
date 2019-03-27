@@ -64,7 +64,7 @@ def load_excel_file(request):
     url = os.path.join(BASE_DIR, 'kanji.xlsx')
     wb = load_workbook(url)
     # wb = load_workbook('C://Users//vuongdv3//Desktop//kanji.xlsx')
-    sheet = wb.get_sheet_by_name('Sheet1')
+    sheet = wb.get_sheet_by_name('Sheet2')
     # current_kanji = sheet['A2'].value
     i = 2
     current_kanji = sheet['A2'].value
