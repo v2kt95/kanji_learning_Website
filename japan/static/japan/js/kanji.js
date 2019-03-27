@@ -16,6 +16,9 @@ $(document).ready(function(){
         $("#kanji_form").val(res.kanji_form)
         $("#meaning_form").val(res.meaning_form)
         $("#main_label").html(res.hiragana_form);
+      }
+      else{
+        $("#main_label").html("終わりましょ");
       }        
     }).catch(function(err){
         console.log(err);
