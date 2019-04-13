@@ -7,6 +7,10 @@ from japan.models import Kanji,Word
 
 kanjis = Kanji.objects.all()
 for kanji in kanjis:
-	kanji.remember_point -= kanji.strokes
+	subtraction = kanji.remember_point - kanji.strokes
+	if subtraction < 0:
+		kanji.remember_point = 0
+	else :
+		kanji.remember_point -= kanji.strokes
 	kanji.save()
 print("updated kanji...\n")
