@@ -100,10 +100,7 @@ def get_average_strokes():
 
 def get_list_remain_word(request):
     is_priority_word = request.GET.get('priority', '')
-    if is_priority_word == "true":
-        priority_list = [1]
-    else:
-        priority_list = [1,0]
+    priority_list = [1]
 
     if request.session.get('kanji', False) == False:
         already_show_kanji = []
