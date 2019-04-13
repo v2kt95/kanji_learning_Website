@@ -4,34 +4,48 @@
  *   version 1.0
  *
  */
-$(document).ready(function(){
 
+$(document).ready(function(){
+  $('.slick_demo_1').slick({
+        dots: true
+    });  
+  update_main_label("始めましょ");
   $("#next").click(function(){
     $("#mark").removeClass("btn-danger").addClass("btn-warning");
     get_word().then(function(res) {
       if (res.is_empty == false) {
-        $("#kanji_meaning").val(res.kanji_meaning)
-        $("#kanji").val(res.kanji)
-        $("#hiragana_form").val(res.hiragana_form)
-        $("#kanji_form").val(res.kanji_form)
-        $("#meaning_form").val(res.meaning_form)
-        $("#main_label").html(res.hiragana_form);
+        $("#kanji_meaning").val(res.kanji.kanji_meaning);
+        $("#kanji").val(res.kanji.kanji);
+        hiragana_form_list = [];
+        kanji_form_list = [];
+        meaning_form_list = [];
+        res.word.forEach(function(element) {
+          hiragana_form_list.push(element.hiragana_form);
+          kanji_form_list.push(element.kanji_form);
+          meaning_form_list.push(element.meaning_form);
+        });
+
+        $("#hiragana_form").val(hiragana_form_list.join(","));
+        $("#kanji_form").val(kanji_form_list.join(","));
+        $("#meaning_form").val(meaning_form_list.join(","));
+        update_main_label(hiragana_form_list.join(","));
+        $("#current_state").val("hiragana_form"); //current state : hiragana_form, kanji_form, meaning_form
       }
       else{
-        $("#main_label").html("終わりましょ");
+        update_main_label("終わりましょ");
       }        
     }).catch(function(err){
         console.log(err);
     });
 
     get_done_word().then(function(res) {
-        update_done_table(res.result)
+        update_done_table(res.result);
     }).catch(function(err){
         console.log(err);
     });
 
     get_remain_word().then(function(res) {
-        update_remain_table(res.result)      
+        update_remain_table(res.result);      
     }).catch(function(err){
         console.log(err);
     });
@@ -39,15 +53,18 @@ $(document).ready(function(){
   });
 
   $("#show").click(function(){
-    switch($("#main_label").html()) {
-      case $("#hiragana_form").val():
-        $("#main_label").html($("#kanji_form").val());
+    switch($("#current_state").val()) {
+      case "hiragana_form":
+        update_main_label($("#kanji_form").val());
+        $("#current_state").val("kanji_form");
         break;
-      case $("#kanji_form").val():
-        $("#main_label").html($("#meaning_form").val());
+      case "kanji_form":
+        update_main_label($("#meaning_form").val());
+        $("#current_state").val("meaning_form");
         break;
       default:
-        $("#main_label").html($("#hiragana_form").val());
+        update_main_label($("#hiragana_form").val());
+        $("#current_state").val("hiragana_form");
     }
   });
 
@@ -68,11 +85,11 @@ $(document).ready(function(){
 
   $("#mark").click(function(){
     $("#mark").removeClass("btn-warning").addClass("btn-danger");
-    var hiragana_mark = $("#hiragana_form").val();
+    var kanji_mark = $("#kanji").val();
     var deferred = new $.Deferred();
     $.ajax({
         type: 'GET',
-        url: 'mark_word?word='+hiragana_mark,
+        url: 'mark_word?word='+kanji_mark,
         success: function(data) {
             deferred.resolve(data);
         },
@@ -82,6 +99,10 @@ $(document).ready(function(){
         }
     });
   });
+
+  // $('.slick_demo_1').slick({
+  //       dots: true
+  //   });
 
 });
 
@@ -111,11 +132,10 @@ function update_remain_table(remain_list)
 }
 
 function get_word() {
-    priority = $('#priority').is(":checked")
     var deferred = new $.Deferred();
     $.ajax({
         type: 'GET',
-        url: 'get_word?priority='+priority,
+        url: 'get_word2',
         success: function(data) {
             deferred.resolve(data);
         },
@@ -158,4 +178,17 @@ function get_remain_word() {
         }
     });
     return deferred.promise();
+}
+
+function update_main_label(string_value) {
+    $('.main_label_element').remove();
+    list_value = string_value.split(",");    
+    list_value.forEach(function(element) {
+      $('.slick_demo_1').prepend("<label class='main_label_element'>"+ element + "</label>");
+    });
+    $('.slick_demo_1').slick('removeSlide', null, null, true);
+    $('.slick_demo_1').slick("unslick");
+    $('.slick_demo_1').slick({
+        dots: true
+    });
 }

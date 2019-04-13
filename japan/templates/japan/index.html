@@ -16,6 +16,9 @@
 
     <link href="{% static 'japan/css/animate.css' %}" rel="stylesheet">
     <link href="{% static 'japan/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'japan/css/plugins/jqGrid/ui.jqgrid.css' %}" rel="stylesheet">
+    <link href="{% static 'japan/css/plugins/slick/slick.css' %}" rel="stylesheet">
+    <link href="{% static 'japan/css/plugins/slick/slick-theme.css' %}" rel="stylesheet">
 
 </head>
 
@@ -25,6 +28,7 @@
     <input type="hidden" id="hiragana_form">
     <input type="hidden" id="kanji_form">
     <input type="hidden" id="meaning_form">
+    <input type="hidden" id="current_state">
     <div id="wrapper">
 
     <nav class="navbar-default navbar-static-side" role="navigation">
@@ -75,113 +79,6 @@
                 </div>
             </form>
         </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <div class="dropdown-messages-box">
-                                <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="{% static '/japan/img/a7.jpg' %}">
-                                </a>
-                                <div class="media-body">
-                                    <small class="pull-right">46h ago</small>
-                                    <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                    <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="dropdown-messages-box">
-                                <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="{% static '/japan/img/a4.jpg' %}">
-                                </a>
-                                <div class="media-body ">
-                                    <small class="pull-right text-navy">5h ago</small>
-                                    <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                    <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="dropdown-messages-box">
-                                <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="{% static '/japan/img/profile.jpg' %}">
-                                </a>
-                                <div class="media-body ">
-                                    <small class="pull-right">23h ago</small>
-                                    <strong>Monica Smith</strong> love <strong>Kim Smith</strong>. <br>
-                                    <small class="text-muted">2 days ago at 2:30 am - 11.06.2014</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a href="mailbox.html">
-                                    <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="mailbox.html">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="profile.html">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small">12 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="grid_options.html">
-                                <div>
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a href="notifications.html">
-                                    <strong>See All Alerts</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li>
-                    <a href="login.html">
-                        <i class="fa fa-sign-out"></i> Log out
-                    </a>
-                </li>
-            </ul>
 
         </nav>
         </div>
@@ -200,7 +97,7 @@
                 <div class="col-sm-8">
                     <div class="title-action">
                         <a id="reset" class="btn btn-primary">reset</a>
-                        <div class="switch">
+                        <!-- <div class="switch">
                             <div class="onoffswitch">
                                 <input type="checkbox" checked class="onoffswitch-checkbox" id="priority">
                                 <label class="onoffswitch-label" for="priority">
@@ -208,7 +105,7 @@
                                     <span class="onoffswitch-switch"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -218,8 +115,7 @@
                     <div class="ibox-title">
                         <h5>Done Word</h5>
                     </div>
-                    <div class="ibox-content">
-
+                    <div class="ibox-content scroll_table">
                         <table class="table" id="done_table">
                             <thead>
                             <tr>
@@ -239,32 +135,31 @@
                 <div class="col-lg-2">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Remain Word</h5>                        
+                        <h5>Remain Word</h5>
                     </div>
-                    <div class="ibox-content">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example" id="remain_table" >
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Word</th>
-                                    </tr>
-                                </thead>
-                                <tbody>                    
-                                </tbody>                    
-                            </table>
-                        </div>
-
+                    <div class="ibox-content scroll_table">
+                        <table class="table" id="remain_table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Word</th>                               
+                            </tr>
+                            </thead>
+                            <tbody>                            
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             </div>
-
             <div class="wrapper wrapper-content">
-                <div class="middle-box text-center animated fadeInRightBig">
+                <div class="middle-box text-center animated fadeInRightBig" style="padding-bottom: 40px;">
                     <p class="font-bold" style="font-size: 70px;">漢字</p>
-                    <div class="bg-primary p-xs b-r-xl" style="font-size: 50px;align-items: center;">
-                        <label id="main_label">始めましょ</label>
+                    <div class="bg-primary p-xs b-r-xl slick_demo_1" style="font-size: 50px;align-items: center;">
+                        <!-- <label id="main_label">始めましょ</label>
+                        <label id="main_label1">始めましょ1</label>
+                        <label id="main_label2">始めましょ2</label>
+                        <label id="main_label3">始めましょ3</label> -->
                     </div>
                     </br>
                     <button id="next" class="btn btn-primary btn-rounded">NEXT</button>
@@ -296,10 +191,23 @@
     <script src="{% static 'japan/js/inspinia.js' %}"></script>
     <script src="{% static 'japan/js/plugins/dataTables/datatables.min.js' %}"></script>
     <script src="{% static 'japan/js/plugins/pace/pace.min.js' %}"></script>
+    <!-- Peity -->
+    <script src="{% static 'japan/js/plugins/peity/jquery.peity.min.js' %}"></script>
+
+    <!-- jqGrid -->
+    <script src="{% static 'japan/js/plugins/jqGrid/i18n/grid.locale-en.js' %}"></script>
+    <script src="{% static 'japan/js/plugins/jqGrid/jquery.jqGrid.min.js' %}"></script>
+    <!-- slick carousel-->
+    <script src="{% static 'japan/js/plugins/slick/slick.min.js' %}"></script>
     <style type="text/css">
         .switch {
             float: right;
             margin-left: 20px;
+        }
+        div.scroll_table {
+            overflow:hidden;
+            overflow-y: scroll;
+            height: 300px; // change this to desired height
         }
     </style>
 

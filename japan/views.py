@@ -16,31 +16,44 @@ def index(request):
     print(request.session['average_strokes'])
     return render(request, 'japan/index.html', context)
 
-def get_word(request):
-    is_priority_word = request.GET.get('priority', '')
-    if is_priority_word == "true":
-        priority_list = [1]
-    else:
-        priority_list = [1,0]
-    # print(priority_list)
+# def get_word(request):
+#     priority_list = [1]
+#     if request.session.get('kanji', False) == False:
+#         already_show_kanji = []
+#         word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).order_by("?").first()
+#         print(word)
+#     else:
+#         already_show_kanji = request.session.get('kanji')
+#         word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).exclude(pk__in=already_show_kanji).order_by("?").first()
+#         print(word)
+#     if word is None:
+#         data = {'is_empty': True}
+#     else:
+#         already_show_kanji.append(word.pk)
+#         request.session['kanji'] = already_show_kanji
+#         kanji = word.kanji
+#         data = {'kanji_meaning': kanji.kanji_meaning, 'kanji': kanji.kanji, 'hiragana_form': word.hiragana_form, 'kanji_form': word.kanji_form, 'meaning_form': word.meaning_form, 'is_empty': False}
+#         kanji.remember_point += request.session['average_strokes']
+#         kanji.save()
+#     return JsonResponse(data)
+
+def getWorsd2(request):
+    priorityList = [1]
     if request.session.get('kanji', False) == False:
-        already_show_kanji = []
-        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).order_by("?").first()
-        print(word)
+        alreadyShowKanji = []
+        kanji = Kanji.objects.filter(remember_point__lte=0)
     else:
-        already_show_kanji = request.session.get('kanji')
-        word = Word.objects.select_related('kanji').filter(kanji__remember_point__lte=0).filter(priority__in=priority_list).exclude(pk__in=already_show_kanji).order_by("?").first()
-        print(word)
-    # print(already_show_kanji)
-    if word is None:
+        alreadyShowKanji = request.session.get('kanji')
+        kanji = Kanji.objects.filter(remember_point__lte=0).exclude(pk__in=alreadyShowKanji)
+    if kanji is None:
         data = {'is_empty': True}
     else:
-        already_show_kanji.append(word.pk)
-        request.session['kanji'] = already_show_kanji
-        kanji = word.kanji
-        data = {'kanji_meaning': kanji.kanji_meaning, 'kanji': kanji.kanji, 'hiragana_form': word.hiragana_form, 'kanji_form': word.kanji_form, 'meaning_form': word.meaning_form, 'is_empty': False}
-        kanji.remember_point += request.session['average_strokes']
-        kanji.save()
+        wordBelongKanji = Word.objects.filter(kanji=kanji[0]).order_by("-priority")
+        alreadyShowKanji.append(kanji[0].pk)
+        request.session['kanji'] = alreadyShowKanji
+        data = {'kanji': list(kanji.values())[0], 'word': list(wordBelongKanji.values()), 'is_empty': False}
+        kanji[0].remember_point += request.session['average_strokes']
+        kanji[0].save()
     return JsonResponse(data)
 
 def reset(request):
@@ -48,14 +61,15 @@ def reset(request):
     return JsonResponse({'response': "ok"})
 
 def mark_word(request):
-    hiragana_word = request.GET.get('word', '')
-    mark_word = Word.objects.filter(hiragana_form=hiragana_word).first()
-    if mark_word is None:
+    kanji = request.GET.get('word', '')
+    mark_kanji = Kanji.objects.filter(kanji=kanji).first()
+    # mark_word = Word.objects.filter(hiragana_form=hiragana_word).first()
+    if mark_kanji is None:
         data = {'result': "failure"}
     else:
-        kanji = mark_word.kanji
-        kanji.remember_point -= round(request.session['average_strokes']/2)
-        kanji.save()
+        # kanji = mark_word.kanji
+        mark_kanji.remember_point -= round(request.session['average_strokes']/2)
+        mark_kanji.save()
         data = {'result': "success"}
     return JsonResponse(data) 
 
@@ -63,9 +77,7 @@ def load_excel_file(request):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(BASE_DIR, 'kanji.xlsx')
     wb = load_workbook(url)
-    # wb = load_workbook('C://Users//vuongdv3//Desktop//kanji.xlsx')
     sheet = wb.get_sheet_by_name('Sheet2')
-    # current_kanji = sheet['A2'].value
     i = 2
     current_kanji = sheet['A2'].value
     while sheet['C'+str(i)].value != None:
@@ -117,3 +129,6 @@ def get_list_old_word(request):
     #     w.save()
     return JsonResponse({'result': list(word)})
 
+def toJSON(self):
+    import simplejson
+    return simplejson.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
