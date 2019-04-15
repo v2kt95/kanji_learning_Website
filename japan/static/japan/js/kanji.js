@@ -55,16 +55,22 @@ $(document).ready(function(){
   $("#show").click(function(){
     switch($("#current_state").val()) {
       case "hiragana_form":
-        update_main_label($("#kanji_form").val());
+        index_slide = $('.slick-active').data("slick-index");
+        update_main_label($("#kanji_form").val());        
         $("#current_state").val("kanji_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
         break;
       case "kanji_form":
+        index_slide = $('.slick-active').data("slick-index");        
         update_main_label($("#meaning_form").val());
         $("#current_state").val("meaning_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
         break;
       default:
+        index_slide = $('.slick-active').data("slick-index");
         update_main_label($("#hiragana_form").val());
         $("#current_state").val("hiragana_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
     }
   });
 
@@ -113,7 +119,7 @@ function update_done_table(done_list)
     for (var i = 0; i < done_list.length; i++) {
         html += '<tr>';
         html += '<td>' + (i + 1) + '</td>';
-        html += '<td>' + done_list[i].kanji_form + '</td>';
+        html += '<td>' + done_list[i].kanji + '</td>';
         html += '</tr>';
     }
     $('#done_table tbody').html(html);
@@ -125,7 +131,7 @@ function update_remain_table(remain_list)
     for (var i = 0; i < remain_list.length; i++) {
         html += '<tr>';
         html += '<td>' + (i + 1) + '</td>';
-        html += '<td>' + remain_list[i].kanji_form + '</td>';
+        html += '<td>' + remain_list[i].kanji + '</td>';
         html += '</tr>';
     }
     $('#remain_table tbody').html(html);
