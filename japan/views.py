@@ -31,8 +31,12 @@ def getWorsd2(request):
         alreadyShowKanji.append(kanji[0].pk)
         request.session['kanji'] = alreadyShowKanji
         data = {'kanji': list(kanji.values())[0], 'word': list(wordBelongKanji.values()), 'is_empty': False}
-        kanji[0].remember_point += request.session['average_strokes']
-        kanji[0].save()
+        kanji_first = kanji[0]
+        kanji_first.remember_point = kanji_first.remember_point + request.session['average_strokes']
+        # print(request.session['average_strokes'])
+        # print(kanji_first.remember_point)
+        kanji_first.save()
+        # print(kanji_first.remember_point)
     return JsonResponse(data)
 
 def reset(request):
