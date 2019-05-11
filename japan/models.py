@@ -9,6 +9,20 @@ class Kanji(models.Model):
     kanji_meaning = models.CharField(max_length=200)
     remember_point = models.IntegerField(default=0)
     strokes = models.IntegerField(default=0)
+    level = models.IntegerField(default=1)
+    day_down = models.IntegerField(default=1)
+
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs)
+        if self.strokes <=5 :
+            self.day_down = 4
+        elif self.strokes <=8:
+            self.day_down = 3
+        elif self.strokes <= 11:
+            self.day_down = 2
+        else:
+            self.day_down = 1
+            
     def __str__(self):
         return self.kanji
 

@@ -19,6 +19,8 @@
     <link href="{% static 'japan/css/plugins/jqGrid/ui.jqgrid.css' %}" rel="stylesheet">
     <link href="{% static 'japan/css/plugins/slick/slick.css' %}" rel="stylesheet">
     <link href="{% static 'japan/css/plugins/slick/slick-theme.css' %}" rel="stylesheet">
+    <!-- c3 Charts -->
+    <link href="{% static 'japan/css/plugins/c3/c3.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -97,69 +99,73 @@
                 <div class="col-sm-8">
                     <div class="title-action">
                         <a id="reset" class="btn btn-primary">reset</a>
-                        <!-- <div class="switch">
-                            <div class="onoffswitch">
-                                <input type="checkbox" checked class="onoffswitch-checkbox" id="priority">
-                                <label class="onoffswitch-label" for="priority">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Done Word</h5>
-                    </div>
-                    <div class="ibox-content scroll_table">
-                        <table class="table" id="done_table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Word</th>                               
-                            </tr>
-                            </thead>
-                            <tbody>                            
-                            </tbody>
-                        </table>
-
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-lg-2">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Remain Word</h5>
-                    </div>
-                    <div class="ibox-content scroll_table">
-                        <table class="table" id="remain_table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Word</th>                               
-                            </tr>
-                            </thead>
-                            <tbody>                            
-                            </tbody>
-                        </table>
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Done Word</h5>
+                        </div>
+                        <div class="ibox-content scroll_table">
+                            <table class="table" id="done_table">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Word</th>                               
+                                </tr>
+                                </thead>
+                                <tbody>                            
+                                </tbody>
+                            </table>
+
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-lg-2">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Remain Word</h5>
+                        </div>
+                        <div class="ibox-content scroll_table">
+                            <table class="table" id="remain_table">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Word</th>                               
+                                </tr>
+                                </thead>
+                                <tbody>                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>            
+
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Pie </h5>
+
+                        </div>
+                        <div class="ibox-content">
+                            <div>
+                                <div id="stocked"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            </div>
+
+
             <div class="wrapper wrapper-content">
-                <div class="middle-box text-center animated fadeInRightBig" style="padding-bottom: 40px;">
+                <div class="middle-box text-center animated fadeInRightBig" style="padding-bottom: 40px;margin-top: 0px;padding-top: 0px;">
                     <p class="font-bold" style="font-size: 70px;">漢字</p>
                     <div class="bg-primary p-xs b-r-xl slick_demo_1" style="font-size: 50px;align-items: center;">
-                        <!-- <label id="main_label">始めましょ</label>
-                        <label id="main_label1">始めましょ1</label>
-                        <label id="main_label2">始めましょ2</label>
-                        <label id="main_label3">始めましょ3</label> -->
                     </div>
                     </br>
                     <button id="next" class="btn btn-primary btn-rounded">NEXT</button>
@@ -199,6 +205,9 @@
     <script src="{% static 'japan/js/plugins/jqGrid/jquery.jqGrid.min.js' %}"></script>
     <!-- slick carousel-->
     <script src="{% static 'japan/js/plugins/slick/slick.min.js' %}"></script>
+    <!-- d3 and c3 charts -->
+    <script src="{% static 'japan/js/plugins/d3/d3.min.js' %}"></script>
+    <script src="{% static 'japan/js/plugins/c3/c3.min.js' %}"></script>
     <style type="text/css">
         .switch {
             float: right;

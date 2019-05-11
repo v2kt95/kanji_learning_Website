@@ -8,7 +8,10 @@
 $(document).ready(function(){
   $('.slick_demo_1').slick({
         dots: true
-    });  
+    });
+
+  update_bar_chart();    
+
   update_main_label("始めましょ");
   $("#next").click(function(){
     $("#mark").removeClass("btn-danger").addClass("btn-warning");
@@ -49,6 +52,8 @@ $(document).ready(function(){
     }).catch(function(err){
         console.log(err);
     });
+
+    update_bar_chart();
 
   });
 
@@ -106,10 +111,6 @@ $(document).ready(function(){
     });
   });
 
-  // $('.slick_demo_1').slick({
-  //       dots: true
-  //   });
-
 });
 
 
@@ -142,6 +143,22 @@ function get_word() {
     $.ajax({
         type: 'GET',
         url: 'get_word2',
+        success: function(data) {
+            deferred.resolve(data);
+        },
+        error: function(err) {
+            console.log(err);
+            deferred.reject(err);
+        }
+    });
+    return deferred.promise();
+}
+
+function get_statistic_data() {
+    var deferred = new $.Deferred();
+    $.ajax({
+        type: 'GET',
+        url: 'get_statistic_kanji',
         success: function(data) {
             deferred.resolve(data);
         },
@@ -197,4 +214,37 @@ function update_main_label(string_value) {
     $('.slick_demo_1').slick({
         dots: true
     });
+}
+
+function update_bar_chart() {
+    get_statistic_data().then(function(res){
+    let col = res.result.reduce((acc, daydown_data, index, daydown_datas) => {
+        display_index = index+1;
+        return acc.concat([["day down "+display_index].concat(daydown_data)]);
+    }, [])
+    c3.generate({
+        bindto: '#stocked',
+        data:{
+            columns: col,
+            // colors:{
+            //     data1: '#1ab394',
+            //     data2: '#BABABA',
+            //     data3: '#212b3d',
+            //     data4: '#ba1a52',
+            // },
+            type: 'bar',
+            groups: [
+                ['day down 1', 'day down 2', 'day down 3', 'day down 4']
+            ]
+        },
+        axis: {
+            x: {
+                type: 'category',
+                categories: ['lv1', 'lv2', 'lv3', 'lv4', 'lv5']
+            }
+        }
+    });
+  }).catch(function(err){
+        console.log(err);
+  });
 }
