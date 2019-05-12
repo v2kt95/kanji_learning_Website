@@ -7,10 +7,11 @@ from japan.models import Kanji,Word
 
 kanjis = Kanji.objects.all()
 for kanji in kanjis:
-	subtraction = kanji.remember_point - kanji.strokes
-	if subtraction < 0:
-		kanji.remember_point = 0
-	else :
-		kanji.remember_point -= kanji.strokes
+	if kanji.day_count == 1:
+		kanji.day_count = kanji.day_down
+		if kanji.level > 1:
+			kanji.level -= 1
+	else:
+		kanji.day_count -= 1
 	kanji.save()
 print("updated kanji...\n")
