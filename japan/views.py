@@ -69,7 +69,7 @@ def load_excel_file(request):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(BASE_DIR, 'kanji.xlsx')
     wb = load_workbook(url)
-    sheet = wb.get_sheet_by_name('Sheet1')
+    sheet = wb.get_sheet_by_name('Sheet2')
     i = 2
     current_kanji = sheet['A2'].value
     while sheet['C'+str(i)].value != None:
