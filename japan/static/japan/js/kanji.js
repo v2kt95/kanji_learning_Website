@@ -34,8 +34,9 @@ $(document).ready(function(){
         update_main_label(hiragana_form_list.join(","));
         $("#current_state").val("hiragana_form"); //current state : hiragana_form, kanji_form, meaning_form
       }
-      else{
+      else{        
         update_main_label("終わりましょ");
+        alert(res.alert)
       }        
     }).catch(function(err){
         console.log(err);
@@ -85,6 +86,7 @@ $(document).ready(function(){
         type: 'GET',
         url: 'reset',
         success: function(data) {
+            location.reload();
             deferred.resolve(data);
         },
         error: function(err) {

@@ -36,3 +36,12 @@ class Word(models.Model):
     remember_score = models.IntegerField(default=0)
     def __str__(self):
         return self.kanji_form
+
+class TimeReview(models.Model):
+    """docstring for TimeReview"""
+    LastTimeReview = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    NextTimeReview = models.DateTimeField(blank=True)
+
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs)
+        self.NextTimeReview = self.LastTimeReview+datetime.timedelta(hours=8)

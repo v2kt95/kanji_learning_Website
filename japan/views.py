@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404
-from .models import Kanji,Word
+from .models import Kanji,Word,TimeReview
 from django.http import JsonResponse
 from django.core import serializers
 from django.forms.models import model_to_dict
 import json
 from openpyxl import load_workbook
 import os
+import datetime
 from django.db.models import Avg, Max, Min, Sum
 
 def index(request):
@@ -29,8 +30,13 @@ def get_statistic_kanji(request):
 
 def getWorsd2(request):
     current_min_level = Kanji.objects.order_by("level")[0].level
+    review_time = TimeReview.objects.all()[0].NextTimeReview.replace(tzinfo=None)
+    current_time = datetime.datetime.now()
     if current_min_level == 5:
-                data = {'is_empty': True}
+        data = {'is_empty': True, 'alert' : 'All Kanji is full level'}
+    elif current_time < review_time:
+        review_time_str = review_time.strftime("%d-%b-%Y (%H:%M:%S)")
+        data = {'is_empty': True, 'alert' : 'Please wait until ' + review_time_str + ' to continue'}
     else:
         if request.session.get('kanji', False) == False:
             alreadyShowKanji = []        
@@ -38,6 +44,11 @@ def getWorsd2(request):
         else:
             alreadyShowKanji = request.session.get('kanji')
             kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by("-strokes")
+
+        if kanji.count() == 0:
+            TimeReview.objects.all().delete()
+            TimeReview().save()
+            return JsonResponse({'is_empty': True, 'alert' : 'Out of kanji'})
 
         wordBelongKanji = Word.objects.filter(kanji=kanji[0]).order_by("priority")
         alreadyShowKanji.append(kanji[0].pk)
