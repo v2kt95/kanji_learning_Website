@@ -11,7 +11,10 @@ for kanji in kanjis:
 		kanji.day_count = kanji.day_down
 		if kanji.level > 1:
 			kanji.level -= 1
+		kanji.save()
 	else:
-		kanji.day_count -= 1
-	kanji.save()
+		print("before :",kanji.day_count)
+		kanji.day_count -= 1		
+		kanji.save()
+		print("after :",kanji.day_count)
 print("updated kanji...\n")
