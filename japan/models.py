@@ -44,4 +44,4 @@ class TimeReview(models.Model):
 
     def __init__(self, *args, **kwargs): 
         super().__init__(*args, **kwargs)
-        self.NextTimeReview = self.LastTimeReview+datetime.timedelta(hours=8)
+        self.NextTimeReview = self.LastTimeReview+datetime.timedelta(hours=4)
