@@ -14,70 +14,11 @@ $(document).ready(function(){
 
   update_main_label("始めましょ");
   $("#next").click(function(){
-    $("#mark").removeClass("btn-danger").addClass("btn-warning");
-    get_word().then(function(res) {
-      if (res.is_empty == false) {
-        $("#kanji_meaning").val(res.kanji.kanji_meaning);
-        $("#kanji").val(res.kanji.kanji);
-        hiragana_form_list = [];
-        kanji_form_list = [];
-        meaning_form_list = [];
-        res.word.forEach(function(element) {
-          hiragana_form_list.push(element.hiragana_form);
-          kanji_form_list.push(element.kanji_form);
-          meaning_form_list.push(element.meaning_form);
-        });
-
-        $("#hiragana_form").val(hiragana_form_list.join(","));
-        $("#kanji_form").val(kanji_form_list.join(","));
-        $("#meaning_form").val(meaning_form_list.join(","));
-        update_main_label(hiragana_form_list.join(","));
-        $("#current_state").val("hiragana_form"); //current state : hiragana_form, kanji_form, meaning_form
-      }
-      else{        
-        update_main_label("終わりましょ");
-        alert(res.alert)
-      }        
-    }).catch(function(err){
-        console.log(err);
-    });
-
-    get_done_word().then(function(res) {
-        update_done_table(res.result);
-    }).catch(function(err){
-        console.log(err);
-    });
-
-    get_remain_word().then(function(res) {
-        update_remain_table(res.result);      
-    }).catch(function(err){
-        console.log(err);
-    });
-
-    update_bar_chart();
-
+    next_event()
   });
 
   $("#show").click(function(){
-    switch($("#current_state").val()) {
-      case "hiragana_form":
-        index_slide = $('.slick-active').data("slick-index");
-        update_main_label($("#kanji_form").val());        
-        $("#current_state").val("kanji_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-        break;
-      case "kanji_form":
-        index_slide = $('.slick-active').data("slick-index");        
-        update_main_label($("#meaning_form").val());
-        $("#current_state").val("meaning_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-        break;
-      default:
-        index_slide = $('.slick-active').data("slick-index");
-        update_main_label($("#hiragana_form").val());
-        $("#current_state").val("hiragana_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-    }
+    show_event()
   });
 
   $("#reset").click(function(){
@@ -97,23 +38,34 @@ $(document).ready(function(){
   });
 
   $("#mark").click(function(){
-    $("#mark").removeClass("btn-warning").addClass("btn-danger");
-    var kanji_mark = $("#kanji").val();
-    var deferred = new $.Deferred();
-    $.ajax({
-        type: 'GET',
-        url: 'mark_word?word='+kanji_mark,
-        success: function(data) {
-            deferred.resolve(data);
-        },
-        error: function(err) {
-            console.log(err);
-            deferred.reject(err);
-        }
-    });
+    mark_event();
   });
 
 });
+
+$(document).keypress(function(event){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+        next_event();
+    }
+    else if(keycode == '32'){
+        show_event();
+    }
+    else if(keycode == '109'){
+        mark_event()
+    }
+    else if(keycode == '52'){
+        $('.slick_demo_1').slick('slickPrev');
+    }
+    else if(keycode == '54'){
+        $('.slick_demo_1').slick('slickNext');           
+    }
+    else{
+        console.log('unknow event');
+    }
+
+});
+
 
 
 function update_done_table(done_list)
@@ -228,12 +180,6 @@ function update_bar_chart() {
         bindto: '#stocked',
         data:{
             columns: col,
-            // colors:{
-            //     data1: '#1ab394',
-            //     data2: '#BABABA',
-            //     data3: '#212b3d',
-            //     data4: '#ba1a52',
-            // },
             type: 'bar',
             groups: [
                 ['day down 1', 'day down 2', 'day down 3', 'day down 4']
@@ -249,4 +195,87 @@ function update_bar_chart() {
   }).catch(function(err){
         console.log(err);
   });
+}
+
+function next_event(){
+    $("#mark").removeClass("btn-danger").addClass("btn-warning");
+    get_word().then(function(res) {
+      if (res.is_empty == false) {
+        $("#kanji_meaning").val(res.kanji.kanji_meaning);
+        $("#kanji").val(res.kanji.kanji);
+        hiragana_form_list = [];
+        kanji_form_list = [];
+        meaning_form_list = [];
+        res.word.forEach(function(element) {
+          hiragana_form_list.push(element.hiragana_form);
+          kanji_form_list.push(element.kanji_form);
+          meaning_form_list.push(element.meaning_form);
+        });
+
+        $("#hiragana_form").val(hiragana_form_list.join(","));
+        $("#kanji_form").val(kanji_form_list.join(","));
+        $("#meaning_form").val(meaning_form_list.join(","));
+        update_main_label(hiragana_form_list.join(","));
+        $("#current_state").val("hiragana_form"); //current state : hiragana_form, kanji_form, meaning_form
+      }
+      else{        
+        update_main_label("終わりましょ");
+        alert(res.alert)
+      }        
+    }).catch(function(err){
+        console.log(err);
+    });
+
+    get_done_word().then(function(res) {
+        update_done_table(res.result);
+    }).catch(function(err){
+        console.log(err);
+    });
+
+    get_remain_word().then(function(res) {
+        update_remain_table(res.result);      
+    }).catch(function(err){
+        console.log(err);
+    });
+
+    update_bar_chart();   
+}
+
+function show_event(){
+    switch($("#current_state").val()) {
+      case "hiragana_form":
+        index_slide = $('.slick-active').data("slick-index");
+        update_main_label($("#kanji_form").val());        
+        $("#current_state").val("kanji_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
+        break;
+      case "kanji_form":
+        index_slide = $('.slick-active').data("slick-index");        
+        update_main_label($("#meaning_form").val());
+        $("#current_state").val("meaning_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
+        break;
+      default:
+        index_slide = $('.slick-active').data("slick-index");
+        update_main_label($("#hiragana_form").val());
+        $("#current_state").val("hiragana_form");
+        $('.slick_demo_1').slick('slickGoTo', index_slide);
+    }
+}
+
+function mark_event(){
+    $("#mark").removeClass("btn-warning").addClass("btn-danger");
+    var kanji_mark = $("#kanji").val();
+    var deferred = new $.Deferred();
+    $.ajax({
+        type: 'GET',
+        url: 'mark_word?word='+kanji_mark,
+        success: function(data) {
+            deferred.resolve(data);
+        },
+        error: function(err) {
+            console.log(err);
+            deferred.reject(err);
+        }
+    });
 }
