@@ -43,21 +43,21 @@ $(document).ready(function(){
 
 });
 
-$(document).keypress(function(event){
-    var keycode = (event.keyCode ? event.keyCode : event.which);
+$(document).keydown(function(event){
+    var keycode = event.which;
     if(keycode == '13'){
         next_event();
     }
     else if(keycode == '32'){
         show_event();
     }
-    else if(keycode == '109'){
+    else if(keycode == '77'){
         mark_event()
     }
-    else if(keycode == '52'){
+    else if(keycode == '37'){
         $('.slick_demo_1').slick('slickPrev');
     }
-    else if(keycode == '54'){
+    else if(keycode == '39'){
         $('.slick_demo_1').slick('slickNext');           
     }
     else{
