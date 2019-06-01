@@ -23,9 +23,6 @@ def get_statistic_kanji(request):
             kanji_num = Kanji.objects.filter(level=lv).filter(day_down=daydown).count()
             daydown_data.append(kanji_num)
         statistic_data.append(daydown_data)
-
-    print(statistic_data)
-
     return JsonResponse({'result': statistic_data})
 
 def getWorsd2(request):
@@ -81,22 +78,30 @@ def load_excel_file(request):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(BASE_DIR, 'kanji.xlsx')
     wb = load_workbook(url)
-    sheet = wb.get_sheet_by_name('Sheet2')
+    sheet = wb.get_sheet_by_name('Sheet1')
     i = 2
     current_kanji = sheet['A2'].value
     while sheet['C'+str(i)].value != None:
-        if sheet['A'+str(i)].value != None:
+        current_word = sheet['C'+str(i)].value
+        if sheet['A'+str(i)].value != None:            
             current_kanji = sheet['A'+str(i)].value
-            kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value,strokes=sheet['F'+str(i)].value)
-            kanji.save()
-            word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value,priority=1)
-            word.save()
-        else:
+            is_existed_kanji = Kanji.objects.filter(kanji=current_kanji).count() > 0
+            if not is_existed_kanji:
+                kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value,strokes=sheet['F'+str(i)].value)
+                kanji.save()
+            else:
+                kanji = Kanji.objects.filter(kanji=current_kanji).first()            
+            is_existed_word = Word.objects.filter(kanji=kanji).filter(hiragana_form=current_word).count() > 0
+            if not is_existed_word:
+                word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value,priority=1)
+                word.save()            
+        else:            
             kanji = Kanji.objects.filter(kanji=current_kanji).first()
-            word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value)
-            word.save()
+            is_existed_word = Word.objects.filter(kanji=kanji).filter(hiragana_form=current_word).count() > 0
+            if not is_existed_word:
+                word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value)
+                word.save()
         i += 1
-
     return JsonResponse({'result': current_kanji})
 
 def get_list_remain_word(request):
