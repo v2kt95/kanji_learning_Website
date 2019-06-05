@@ -31,10 +31,10 @@ def getWorsd2(request):
     current_time = datetime.datetime.now()
     if current_min_level == 5:
         data = {'is_empty': True, 'alert' : 'All Kanji is full level'}
-    elif current_time < review_time:
-        local_time_review = review_time + datetime.timedelta(hours=7)
-        review_time_str = local_time_review.strftime("%d-%b-%Y (%H:%M:%S)")
-        data = {'is_empty': True, 'alert' : 'Please wait until ' + review_time_str + ' to continue'}
+    # elif current_time < review_time:
+    #     local_time_review = review_time + datetime.timedelta(hours=7)
+    #     review_time_str = local_time_review.strftime("%d-%b-%Y (%H:%M:%S)")
+    #     data = {'is_empty': True, 'alert' : 'Please wait until ' + review_time_str + ' to continue'}
     else:
         if request.session.get('kanji', False) == False:
             alreadyShowKanji = []        
