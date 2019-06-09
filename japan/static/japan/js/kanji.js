@@ -10,11 +10,17 @@ $(document).ready(function(){
         dots: true
     });
 
+  $('.slick_demo_1').on('afterChange', function(event, slick, currentSlide, nextSlide){
+      if ($("#current_state").val() == "unlock") {
+          update_meaning_kanji_label()    
+      }      
+    });
+
   update_bar_chart();    
 
   update_main_label("始めましょ");
   $("#next").click(function(){
-    next_event()
+    next_event()    
   });
 
   $("#show").click(function(){
@@ -215,11 +221,12 @@ function next_event(){
         $("#hiragana_form").val(hiragana_form_list.join(","));
         $("#kanji_form").val(kanji_form_list.join(","));
         $("#meaning_form").val(meaning_form_list.join(","));
-        update_main_label(hiragana_form_list.join(","));
-        $("#current_state").val("hiragana_form"); //current state : hiragana_form, kanji_form, meaning_form
+        update_main_label(hiragana_form_list.join(","));        
+        reset_meaning_kanji_label()
       }
       else{        
         update_main_label("終わりましょ");
+        reset_meaning_kanji_label();
         alert(res.alert)
       }        
     }).catch(function(err){
@@ -241,26 +248,26 @@ function next_event(){
     update_bar_chart();   
 }
 
+function reset_meaning_kanji_label(){
+    $("#kanji_label").html("<i class='fa fa-lock'></i>")
+    $("#meaning_label").html("<i class='fa fa-lock'></i>")
+    $("#current_state").val("lock"); //current state : lock, unlock
+}
+
+function update_meaning_kanji_label(){
+    var index_slide = $('.slick-active').data("slick-index")
+    var max_index = $("#kanji_form").val().split(",").length - 1
+    $("#kanji_label").html($("#kanji_form").val().split(",")[max_index - index_slide])
+    $("#meaning_label").html($("#meaning_form").val().split(",")[max_index - index_slide])
+    $("#current_state").val("unlock"); //current state : lock, unlock
+}
+
 function show_event(){
-    switch($("#current_state").val()) {
-      case "hiragana_form":
-        index_slide = $('.slick-active').data("slick-index");
-        update_main_label($("#kanji_form").val());        
-        $("#current_state").val("kanji_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-        break;
-      case "kanji_form":
-        index_slide = $('.slick-active').data("slick-index");        
-        update_main_label($("#meaning_form").val());
-        $("#current_state").val("meaning_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-        break;
-      default:
-        index_slide = $('.slick-active').data("slick-index");
-        update_main_label($("#hiragana_form").val());
-        $("#current_state").val("hiragana_form");
-        $('.slick_demo_1').slick('slickGoTo', index_slide);
-    }
+    if ($("#current_state").val() == "lock") {
+        update_meaning_kanji_label()
+    } else {
+        reset_meaning_kanji_label()
+    }    
 }
 
 function mark_event(){
