@@ -38,10 +38,10 @@ def getWorsd2(request):
     else:
         if request.session.get('kanji', False) == False:
             alreadyShowKanji = []        
-            kanji = Kanji.objects.filter(level=current_min_level).order_by("-strokes")
+            kanji = Kanji.objects.filter(level=current_min_level).order_by('?')
         else:
             alreadyShowKanji = request.session.get('kanji')
-            kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by("-strokes")
+            kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by('?')
 
         if kanji.count() == 0:
             TimeReview.objects.all().delete()
