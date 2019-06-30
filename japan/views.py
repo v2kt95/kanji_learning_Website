@@ -18,7 +18,7 @@ def index(request):
 
 def get_statistic_kanji(request):
     statistic_data = []
-    for daydown in range(1,5):
+    for daydown in [2,4,6,8]:
         daydown_data = []
         for lv in range(1,6):            
             kanji_num = Kanji.objects.filter(level=lv).filter(day_down=daydown).count()

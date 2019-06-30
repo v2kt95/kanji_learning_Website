@@ -200,7 +200,7 @@ function update_bar_chart() {
             columns: col,
             type: 'bar',
             groups: [
-                ['day down 1', 'day down 2', 'day down 3', 'day down 4']
+                ['day down 2', 'day down 4', 'day down 6', 'day down 8']
             ]
         },
         axis: {
