@@ -58,6 +58,7 @@ def getWorsd2(request):
         data = {'kanji': list(kanji.values())[0], 'word': list(wordBelongKanji.values()), 'is_empty': False}
         kanji_first = kanji[random_index]
         kanji_first.level += 1
+        kanji.day_count = kanji.day_down
         kanji_first.save()
 
     return JsonResponse(data)
