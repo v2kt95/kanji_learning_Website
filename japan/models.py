@@ -9,7 +9,7 @@ class Kanji(models.Model):
     kanji_meaning = models.CharField(max_length=200)
     remember_point = models.IntegerField(default=0)
     strokes = models.IntegerField(default=0)
-    level = models.IntegerField(default=4)
+    level = models.IntegerField(default=1)
     day_down = models.IntegerField(default=1)
     day_count = models.IntegerField(default=1)
 
