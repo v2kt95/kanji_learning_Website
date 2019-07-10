@@ -231,31 +231,19 @@
       var wakeLockEnabled = false;
       var toggleEl = document.querySelector("#show");
       document.addEventListener('touchstart', function() {
-        if (!wakeLockEnabled) {
-          noSleep.enable(); // keep the screen on!
-          wakeLockEnabled = true;
-          toggleEl.innerHTML = "Wake Lock is enabled";
-          document.body.style.backgroundColor = "green";
-        } else {
-          noSleep.disable(); // let the screen turn off.
-          wakeLockEnabled = false;
-          toggleEl.innerHTML = "Wake Lock is disabled";
-          document.body.style.backgroundColor = "";
-        }
+        document.removeEventListener('touchstart', enableNoSleep, false);
+        noSleep.enable(); // keep the screen on!
+        wakeLockEnabled = true;
+        toggleEl.innerHTML = "Wake Lock is enabled";
+        document.body.style.backgroundColor = "green";        
       }, false);
 
       document.addEventListener('click', function() {
-        if (!wakeLockEnabled) {
-          noSleep.enable(); // keep the screen on!
-          wakeLockEnabled = true;
-          toggleEl.innerHTML = "Wake Lock is enabled";
-          document.body.style.backgroundColor = "green";
-        } else {
-          noSleep.disable(); // let the screen turn off.
-          wakeLockEnabled = false;
-          toggleEl.innerHTML = "Wake Lock is disabled";
-          document.body.style.backgroundColor = "";
-        }
+        document.removeEventListener('click', enableNoSleep2, false);
+        noSleep.enable(); // keep the screen on!
+        wakeLockEnabled = true;
+        toggleEl.innerHTML = "Wake Lock is enabled";
+        document.body.style.backgroundColor = "green";
       }, false);
     
     </script>
