@@ -230,7 +230,7 @@
 
       var wakeLockEnabled = false;
       var toggleEl = document.querySelector("#show");
-      document.addEventListener('touchstart', function() {
+      document.addEventListener('touchstart', function enableNoSleep() {
         document.removeEventListener('touchstart', enableNoSleep, false);
         noSleep.enable(); // keep the screen on!
         wakeLockEnabled = true;
@@ -238,7 +238,7 @@
         document.body.style.backgroundColor = "green";        
       }, false);
 
-      document.addEventListener('click', function() {
+      document.addEventListener('click', function enableNoSleep2() {
         document.removeEventListener('click', enableNoSleep2, false);
         noSleep.enable(); // keep the screen on!
         wakeLockEnabled = true;
