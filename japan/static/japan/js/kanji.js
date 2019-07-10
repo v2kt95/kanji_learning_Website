@@ -8,15 +8,27 @@ var kanji_json = [{"w":"氏","h":"THỊ, CHI"},{"w":"統","h":"THỐNG"},{"w":"�
 
 $(document).ready(function(){
   var noSleep = new NoSleep();
-	document.addEventListener('click', function enableNoSleep() {
-	  document.removeEventListener('click', enableNoSleep, false);
-	  noSleep.enable();
-	}, false);
 
-	document.addEventListener('touchend', function enableNoSleep() {
-	  document.removeEventListener('touchend', enableNoSleep, false);
-	  noSleep.enable();
-	}, false);	
+  var wakeLockEnabled = false;
+  var toggleEl = document.querySelector("#show");
+  toggleEl.addEventListener('click', function() {
+    if (!wakeLockEnabled) {
+      noSleep.enable(); // keep the screen on!
+      wakeLockEnabled = true;
+      toggleEl.value = "Wake Lock is enabled";
+      document.body.style.backgroundColor = "green";
+    } else {
+      noSleep.disable(); // let the screen turn off.
+      wakeLockEnabled = false;
+      toggleEl.value = "Wake Lock is disabled";
+      document.body.style.backgroundColor = "";
+    }
+  }, false);
+
+	// document.addEventListener('click', function enableNoSleep() {
+	//   document.removeEventListener('click', enableNoSleep, false);
+	//   noSleep.enable();
+	// }, false);
 
   $('.slick_demo_1').slick({
         dots: true
