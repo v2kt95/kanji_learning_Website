@@ -8,11 +8,6 @@ var kanji_json = [{"w":"氏","h":"THỊ, CHI"},{"w":"統","h":"THỐNG"},{"w":"�
 
 $(document).ready(function(){
 
-	// document.addEventListener('click', function enableNoSleep() {
-	//   document.removeEventListener('click', enableNoSleep, false);
-	//   noSleep.enable();
-	// }, false);
-
   $('.slick_demo_1').slick({
         dots: true
     });

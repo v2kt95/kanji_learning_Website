@@ -224,29 +224,6 @@
             height: 300px; // change this to desired height
         }
     </style>
-    <script type="text/javascript">
-
-      var noSleep = new NoSleep();
-
-      var wakeLockEnabled = false;
-      var toggleEl = document.querySelector("#show");
-      document.addEventListener('touchstart', function enableNoSleep() {
-        document.removeEventListener('touchstart', enableNoSleep, false);
-        noSleep.enable(); // keep the screen on!
-        wakeLockEnabled = true;
-        toggleEl.innerHTML = "Wake Lock is enabled";
-        document.body.style.backgroundColor = "green";        
-      }, false);
-
-      document.addEventListener('click', function enableNoSleep2() {
-        document.removeEventListener('click', enableNoSleep2, false);
-        noSleep.enable(); // keep the screen on!
-        wakeLockEnabled = true;
-        toggleEl.innerHTML = "Wake Lock is enabled";
-        document.body.style.backgroundColor = "green";
-      }, false);
-    
-    </script>
 
 </body>
 
