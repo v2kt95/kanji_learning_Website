@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'japan.apps.JapanConfig',
-    'polls.apps.PollsConfig',
+    'grammar.apps.GrammarConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -104,7 +104,7 @@ def load_excel_file(request):
             kanji = Kanji.objects.filter(kanji=current_kanji).first()
             is_existed_word = Word.objects.filter(kanji=kanji).filter(hiragana_form=current_word).count() > 0
             if not is_existed_word:
-                word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value)
+                word = Word(kanji=kanji, hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value)
                 word.save()
         i += 1
     return JsonResponse({'result': current_kanji})
