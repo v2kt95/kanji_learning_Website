@@ -16,7 +16,7 @@ def load_excel_file(request):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(base_dir, 'kanji.xlsx')
     wb = load_workbook(url)
-    sheet = wb.get_sheet_by_name('Sheet2')
+    sheet = wb.get_sheet_by_name('Sheet1')
     i = 2
     current_formula = sheet['A2'].value
     while sheet['F' + str(i)].value is not None:

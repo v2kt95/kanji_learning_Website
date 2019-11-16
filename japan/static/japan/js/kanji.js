@@ -193,7 +193,7 @@ function update_bar_chart() {
     let col = res.result.reduce((acc, daydown_data, index, daydown_datas) => {
         display_index = index+1;
         return acc.concat([["day down "+display_index].concat(daydown_data)]);
-    }, [])
+    }, []);
     c3.generate({
         bindto: '#stocked',
         data:{
@@ -225,8 +225,8 @@ function next_event(){
         kanji_form_list = [];
         meaning_form_list = [];
         res.word.forEach(function(element) {
-          hiragana_form_list.push(element.hiragana_form);
-          kanji_form_list.push(element.kanji_form);
+          hiragana_form_list.push(element.kanji_form);
+          kanji_form_list.push(element.hiragana_form);
           meaning_form_list.push(element.meaning_form);
         });
 
@@ -270,7 +270,7 @@ function reset_meaning_kanji_label(){
 function update_meaning_kanji_label(){
     var index_slide = $('.slick-active').data("slick-index")
     var max_index = $("#kanji_form").val().split(",").length - 1
-    var current_kanji_value = $("#kanji_form").val().split(",")[max_index - index_slide]
+    var current_kanji_value = $("#hiragana_form").val().split(",")[max_index - index_slide]
     const reducer = (accumulator, currentValue) => get_kanji_meaning_by_word(accumulator) + get_kanji_meaning_by_word(currentValue);
     var kanji_meaning_label_value = current_kanji_value.split("").reduce(reducer)
     $("#kanji_label").html($("#kanji_form").val().split(",")[max_index - index_slide])
