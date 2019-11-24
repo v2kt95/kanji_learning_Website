@@ -17,10 +17,8 @@ for kanji in kanjis:
             kanji.level -= 1
         kanji.save()
     else:
-        print("before :", kanji.day_count)
         kanji.day_count -= 1
         kanji.save()
-        print("after :", kanji.day_count)
 
 for grammar in grammars:
     if grammar.day_count == 1:
