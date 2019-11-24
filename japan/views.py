@@ -1,42 +1,41 @@
-from django.shortcuts import get_object_or_404, render
-from django.http import Http404
-from .models import Kanji,Word,TimeReview
-from django.http import JsonResponse
-from django.core import serializers
-from django.forms.models import model_to_dict
-import json
-from openpyxl import load_workbook
 import os
-import datetime
-from django.db.models import Avg, Max, Min, Sum
 from random import randint
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from openpyxl import load_workbook
+
+from .models import Kanji, Word, TimeReview
+
 
 def index(request):
     kanji_list = Kanji.objects.all()
     context = {'kanji_list': kanji_list}
     return render(request, 'japan/index.html', context)
 
+
 def get_statistic_kanji(request):
     statistic_data = []
-    for daydown in [2,4,6,8]:
-        daydown_data = []
+    for day_down in [2, 4, 6, 8]:
+        day_down_data = []
         for lv in range(1,6):            
-            kanji_num = Kanji.objects.filter(level=lv).filter(day_down=daydown).count()
-            daydown_data.append(kanji_num)
-        statistic_data.append(daydown_data)
+            kanji_num = Kanji.objects.filter(level=lv).filter(day_down=day_down).count()
+            day_down_data.append(kanji_num)
+        statistic_data.append(day_down_data)
     return JsonResponse({'result': statistic_data})
 
-def getWorsd2(request):
+
+def get_word(request):
     current_min_level = Kanji.objects.order_by("level")[0].level
-    alreadyShowKanji = []
+    already_show_kanji = []
     if current_min_level == 5:
         data = {'is_empty': True, 'alert' : 'All Kanji is full level'}
     else:
-        if request.session.get('kanji', False) == False:                  
+        if not request.session.get('kanji', False):
             kanji = Kanji.objects.filter(level=current_min_level).order_by('-strokes')            
         else:
-            alreadyShowKanji = request.session.get('kanji')
-            kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by('-strokes')
+            already_show_kanji = request.session.get('kanji')
+            kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=already_show_kanji).order_by('-strokes')
         if kanji.count() == 0:
             TimeReview.objects.all().delete()
             TimeReview().save()
@@ -44,10 +43,10 @@ def getWorsd2(request):
 
         total_kanji = kanji.count()
         random_index = randint(0, total_kanji - 1)
-        wordBelongKanji = Word.objects.filter(kanji=kanji[random_index]).order_by("priority")
-        alreadyShowKanji.append(kanji[random_index].pk)
-        request.session['kanji'] = alreadyShowKanji
-        data = {'kanji': list(kanji.values())[random_index], 'word': list(wordBelongKanji.values()), 'is_empty': False}
+        word_belong_kanji = Word.objects.filter(kanji=kanji[random_index]).order_by("priority")
+        already_show_kanji.append(kanji[random_index].pk)
+        request.session['kanji'] = already_show_kanji
+        data = {'kanji': list(kanji.values())[random_index], 'word': list(word_belong_kanji.values()), 'is_empty': False}
         kanji_first = kanji[random_index]
         kanji_first.level += 1
         kanji_first.day_count = kanji_first.day_down
@@ -55,9 +54,11 @@ def getWorsd2(request):
 
     return JsonResponse(data)
 
+
 def reset(request):
     request.session['kanji'] = []
     return JsonResponse({'response': "ok"})
+
 
 def mark_word(request):
     kanji = request.GET.get('word', '')
@@ -71,16 +72,17 @@ def mark_word(request):
 
     return JsonResponse(data)
 
+
 def load_excel_file(request):
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    url = os.path.join(BASE_DIR, 'kanji.xlsx')
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    url = os.path.join(base_dir, 'kanji.xlsx')
     wb = load_workbook(url)
     sheet = wb.get_sheet_by_name('Sheet1')
     i = 2
     current_kanji = sheet['A2'].value
-    while sheet['C'+str(i)].value != None:
+    while sheet['C' + str(i)].value is not None:
         current_word = sheet['C'+str(i)].value
-        if sheet['A'+str(i)].value != None:            
+        if sheet['A' + str(i)].value is not None:
             current_kanji = sheet['A'+str(i)].value
             is_existed_kanji = Kanji.objects.filter(kanji=current_kanji).count() > 0
             if not is_existed_kanji:
@@ -90,34 +92,33 @@ def load_excel_file(request):
                 kanji = Kanji.objects.filter(kanji=current_kanji).first()            
             is_existed_word = Word.objects.filter(kanji=kanji).filter(hiragana_form=current_word).count() > 0
             if not is_existed_word:
-                word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value,priority=1)
+                word = Word(kanji=kanji,hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value, meaning_form=sheet['E'+str(i)].value, priority=1)
                 word.save()            
         else:            
             kanji = Kanji.objects.filter(kanji=current_kanji).first()
             is_existed_word = Word.objects.filter(kanji=kanji).filter(hiragana_form=current_word).count() > 0
             if not is_existed_word:
-                word = Word(kanji=kanji, hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value,meaning_form=sheet['E'+str(i)].value)
+                word = Word(kanji=kanji, hiragana_form=sheet['C'+str(i)].value,kanji_form=sheet['D'+str(i)].value, meaning_form=sheet['E'+str(i)].value)
                 word.save()
         i += 1
     return JsonResponse({'result': current_kanji})
 
+
 def get_list_remain_word(request):
     current_min_level = Kanji.objects.order_by("level")[0].level
-    if request.session.get('kanji', False) == False:
-        alreadyShowKanji = []
+    if not request.session.get('kanji', False):
         kanji = Kanji.objects.filter(level=current_min_level).order_by("-strokes").values()
     else:
-        alreadyShowKanji = request.session.get('kanji')
-        kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by("-strokes").values()
+        already_show_kanji = request.session.get('kanji')
+        kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=already_show_kanji).order_by("-strokes").values()
 
     return JsonResponse({'result': list(kanji)})
 
+
 def get_list_done_word(request):
-    alreadyShowKanji = []
-    if request.session.get('kanji', False) == False:        
+    if not request.session.get('kanji', False):
         kanji = []
     else:
-        alreadyShowKanji = request.session.get('kanji')
-        kanji = list(Kanji.objects.filter(pk__in=alreadyShowKanji).values())
-    print("(get_list_done_word) alreadyShowKanji: ", alreadyShowKanji)
+        already_show_kanji = request.session.get('kanji')
+        kanji = list(Kanji.objects.filter(pk__in=already_show_kanji).values())
     return JsonResponse({'result': kanji})
