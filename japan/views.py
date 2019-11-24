@@ -28,20 +28,15 @@ def get_statistic_kanji(request):
 
 def getWorsd2(request):
     current_min_level = Kanji.objects.order_by("level")[0].level
-    review_time = TimeReview.objects.all()[0].NextTimeReview.replace(tzinfo=None)
-    current_time = datetime.datetime.now()
     alreadyShowKanji = []
-    total_kanji = 0
     if current_min_level == 5:
         data = {'is_empty': True, 'alert' : 'All Kanji is full level'}
     else:
         if request.session.get('kanji', False) == False:                  
             kanji = Kanji.objects.filter(level=current_min_level).order_by('-strokes')            
-            print("kanji_meaning1: ", kanji[0].kanji_meaning)
         else:
             alreadyShowKanji = request.session.get('kanji')
             kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=alreadyShowKanji).order_by('-strokes')
-            print("kanji_meaning2: ", kanji[0].kanji_meaning)
         if kanji.count() == 0:
             TimeReview.objects.all().delete()
             TimeReview().save()
@@ -50,12 +45,9 @@ def getWorsd2(request):
         total_kanji = kanji.count()
         random_index = randint(0, total_kanji - 1)
         wordBelongKanji = Word.objects.filter(kanji=kanji[random_index]).order_by("priority")
-        print("kanji_meaning3: ", kanji[random_index].kanji_meaning)
-        print("wordBelongKanji :", wordBelongKanji[0].meaning_form)
         alreadyShowKanji.append(kanji[random_index].pk)
         request.session['kanji'] = alreadyShowKanji
-        print("alreadyShowKanji: ", alreadyShowKanji)
-        data = {'kanji': list(kanji.values())[0], 'word': list(wordBelongKanji.values()), 'is_empty': False}
+        data = {'kanji': list(kanji.values())[random_index], 'word': list(wordBelongKanji.values()), 'is_empty': False}
         kanji_first = kanji[random_index]
         kanji_first.level += 1
         kanji_first.day_count = kanji_first.day_down
@@ -92,7 +84,7 @@ def load_excel_file(request):
             current_kanji = sheet['A'+str(i)].value
             is_existed_kanji = Kanji.objects.filter(kanji=current_kanji).count() > 0
             if not is_existed_kanji:
-                kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value,strokes=sheet['F'+str(i)].value)
+                kanji = Kanji(kanji=sheet['A'+str(i)].value,kanji_meaning=sheet['B'+str(i)].value,strokes=sheet['F'+str(i)].value, kanji_explain=sheet['G'+str(i)].value)
                 kanji.save()
             else:
                 kanji = Kanji.objects.filter(kanji=current_kanji).first()            

@@ -12,6 +12,7 @@ class Kanji(models.Model):
     level = models.IntegerField(default=1)
     day_down = models.IntegerField(default=1)
     day_count = models.IntegerField(default=1)
+    kanji_explain = models.CharField(default="", max_length=500, null=True)
 
     def __init__(self, *args, **kwargs): 
         super().__init__(*args, **kwargs)

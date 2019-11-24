@@ -221,6 +221,8 @@ function next_event(){
       if (res.is_empty == false) {
         $("#kanji_meaning").val(res.kanji.kanji_meaning);
         $("#kanji").val(res.kanji.kanji);
+        $("#kanji_explain").val(res.kanji.kanji_explain);
+        console.log(res.kanji);
         hiragana_form_list = [];
         kanji_form_list = [];
         meaning_form_list = [];
@@ -264,6 +266,7 @@ function reset_meaning_kanji_label(){
     $("#kanji_label").html("<i class='fa fa-lock'></i>")
     $("#meaning_label").html("<i class='fa fa-lock'></i>")
     $("#kanji_meaning_label").html("<i class='fa fa-lock'></i>")
+    $("#kanji_explain_2").html("<i class='fa fa-lock'></i>")
     $("#current_state").val("lock"); //current state : lock, unlock    
 }
 
@@ -277,6 +280,7 @@ function update_meaning_kanji_label(){
     $("#meaning_label").html($("#meaning_form").val().split(",")[max_index - index_slide])
     $("#kanji_meaning_label").html(kanji_meaning_label_value.trim())
     $("#current_state").val("unlock"); //current state : lock, unlock
+    $("#kanji_explain_2").html($("#kanji_explain").val())
 }
 
 function show_event(){
