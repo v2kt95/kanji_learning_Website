@@ -27,31 +27,19 @@ def get_statistic_kanji(request):
 
 def get_word(request):
     current_min_level = Kanji.objects.order_by("level")[0].level
-    already_show_kanji = []
     if current_min_level == 5:
         data = {'is_empty': True, 'alert' : 'All Kanji is full level'}
     else:
-        if not request.session.get('kanji', False):
-            kanji = Kanji.objects.filter(level=current_min_level).order_by('-strokes')            
-        else:
-            already_show_kanji = request.session.get('kanji')
-            kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=already_show_kanji).order_by('-strokes')
+        kanji = Kanji.objects.filter(level=current_min_level)
         if kanji.count() == 0:
-            TimeReview.objects.all().delete()
-            TimeReview().save()
             return JsonResponse({'is_empty': True, 'alert' : 'Out of kanji'})
-
-        # total_kanji = kanji.count()
-        # random_index = randint(0, total_kanji - 1)
         word_belong_kanji = Word.objects.filter(kanji=kanji[0]).order_by("priority")
-        already_show_kanji.append(kanji[0].pk)
-        request.session['kanji'] = already_show_kanji
         data = {'kanji': list(kanji.values())[0], 'word': list(word_belong_kanji.values()), 'is_empty': False}
         kanji_first = kanji[0]
         kanji_first.level += 1
         kanji_first.day_count = kanji_first.day_down
         kanji_first.save()
-
+        print('data:', data)
     return JsonResponse(data)
 
 
