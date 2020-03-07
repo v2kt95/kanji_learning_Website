@@ -3,3 +3,7 @@
 
 # Database
 *.sqlite3
+*.pyc
+grammar/__pycache__/*
+japan/__pycache__/*
+nihongo1/__pycache__/*
