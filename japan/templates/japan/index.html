@@ -135,29 +135,40 @@
                         <div class="bg-primary p-xs b-r-xl " style="font-size: 50px;align-items: center;">
                             <div>
                                 <label class='main_label_element'>[[words[current_index].kanji_form]]</label>
+                                <div class="row make-row-small ">
+                                    <div v-on:click="de_select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in result_quizz_char">
+                                        [[char.character]]
+                                    </div>
+                                </div>
                                 <div v-if="!is_lock">
-                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                    <div class="row make-row-small">
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].hiragana_form"></div>
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].meaning_form"></div>
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].kanji_meaning_label_value"></div>
                                     </div>
-                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                    <div class="row make-row-small">
                                         <div id="kanji_explain_2" class="bg-primary p-xs b-r-xl col-md-12" style="font-size: 20px;align-items: center;" v-html="current_kanji.kanji_explain"></div>
                                     </div>
                                 </div>
 
                                 <div v-if="is_lock">
-                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                    <div class="row  make-row-small">
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
                                     </div>
-                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                    <div class="row make-row-small">
                                         <div id="kanji_explain_2" class="bg-primary p-xs b-r-xl col-md-12"
                                              style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
                                     </div>
                                 </div>
 
+                            </div>
+                        </div>
+
+                        <div class="row make-row-small " style="margin-top: 20px;">
+                            <div v-on:click="select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in swap_quizz_char">
+                                [[char]]
                             </div>
                         </div>
 
@@ -215,6 +226,20 @@
             overflow:hidden;
             overflow-y: scroll;
             height: 300px; 
+        }
+        .make-row-small {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        .square {
+            width: 30px;
+            height: 30px;
+            background: white;
+            margin-right: 5px;
+            color: black;
+            padding-left: 5px;
+            display: inline;
+            cursor: default;
         }
     </style>
 
