@@ -47,20 +47,6 @@ def reset(request):
     request.session['kanji'] = []
     return JsonResponse({'response': "ok"})
 
-
-def mark_word(request):
-    kanji = request.GET.get('word', '')
-    mark_kanji = Kanji.objects.filter(kanji=kanji).first()
-    if mark_kanji is None:
-        data = {'result': "failure"}
-    else:
-        mark_kanji.level -= 1
-        mark_kanji.save()
-        data = {'result': "success"}
-
-    return JsonResponse(data)
-
-
 def load_excel_file(request):
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     url = os.path.join(base_dir, 'kanji.xlsx')
@@ -101,12 +87,3 @@ def get_list_remain_word(request):
         kanji = Kanji.objects.filter(level=current_min_level).exclude(pk__in=already_show_kanji).order_by("-strokes").values()
 
     return JsonResponse({'result': list(kanji)})
-
-
-def get_list_done_word(request):
-    if not request.session.get('kanji', False):
-        kanji = []
-    else:
-        already_show_kanji = request.session.get('kanji')
-        kanji = list(Kanji.objects.filter(pk__in=already_show_kanji).values())
-    return JsonResponse({'result': kanji})

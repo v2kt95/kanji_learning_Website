@@ -21,177 +21,166 @@
     <link href="{% static 'japan/css/plugins/slick/slick-theme.css' %}" rel="stylesheet">
     <!-- c3 Charts -->
     <link href="{% static 'japan/css/plugins/c3/c3.min.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 </head>
 
 <body class="">
-    <input type="hidden" id="kanji_meaning">
-    <input type="hidden" id="kanji">
-    <input type="hidden" id="hiragana_form">
-    <input type="hidden" id="kanji_form">
-    <input type="hidden" id="meaning_form">
-    <input type="hidden" id="current_state">
-    <input type="hidden" id="kanji_explain">
-    <div id="wrapper">
-
-    <nav class="navbar-default navbar-static-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav metismenu" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="{% static '/japan/img/profile_small.jpg' %}" />
-                             </span>
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
-                             </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                            <li><a href="profile.html">Profile</a></li>
-                            <li><a href="contacts.html">Contacts</a></li>
-                            <li><a href="mailbox.html">Mailbox</a></li>
-                            <li class="divider"></li>
-                            <li><a href="login.html">Logout</a></li>
-                        </ul>
-                    </div>
-                    <div class="logo-element">
-                        IN+
-                    </div>
-                </li>
-                <li>
-                    <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="index.html">Dashboard v.1</a></li>
-                        <li><a href="dashboard_2.html">Dashboard v.2</a></li>
-                        <li><a href="dashboard_3.html">Dashboard v.3</a></li>
-                        <li><a href="dashboard_4_1.html">Dashboard v.4</a></li>
-                        <li><a href="dashboard_5.html">Dashboard v.5 </a></li>
-                    </ul>
-                </li>                
-            </ul>
-
-        </div>
-    </nav>
-
-        <div id="page-wrapper" class="gray-bg">
-        <div class="row border-bottom">
-        <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html">
-                <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
-                </div>
-            </form>
-        </div>
-
-        </nav>
-        </div>
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>This is main title</h2>
-                    <ol class="breadcrumb">
+    <div id="app">
+        <div id="wrapper">
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="nav-header">
+                            <div class="dropdown profile-element"> <span>
+                                    <img alt="image" class="img-circle" src="{% static '/japan/img/profile_small.jpg' %}" />
+                                     </span>
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
+                                     </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
+                            </div>
+                            <div class="logo-element">
+                                IN+
+                            </div>
+                        </li>
                         <li>
-                            <a href="index.html">This is</a>
+                            <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li><a href="index.html">Dashboard v.1</a></li>
+                                <li><a href="dashboard_2.html">Dashboard v.2</a></li>
+                            </ul>
                         </li>
-                        <li class="active">
-                            <strong>Breadcrumb</strong>
-                        </li>
-                    </ol>
+                    </ul>
+
                 </div>
-                <div class="col-sm-8">
-                    <div class="title-action">
-                        <a id="reset" class="btn btn-primary">reset</a>
+            </nav>
+
+            <div id="page-wrapper" class="gray-bg">
+                <div class="row border-bottom">
+                    <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+                        <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>
+                    </div>
+                    </nav>
+                </div>
+                <div class="row wrapper border-bottom white-bg page-heading">
+                    <div class="col-sm-4">
+                        <h2>This is main title</h2>
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="index.html">This is</a>
+                            </li>
+                            <li class="active">
+                                <strong>Breadcrumb</strong>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="title-action">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Done Word</h5>
-                        </div>
-                        <div class="ibox-content scroll_table">
-                            <table class="table" id="done_table">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Word</th>                               
-                                </tr>
-                                </thead>
-                                <tbody>                            
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-2">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Remain Word</h5>
-                        </div>
-                        <div class="ibox-content scroll_table">
-                            <table class="table" id="remain_table">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Word</th>                               
-                                </tr>
-                                </thead>
-                                <tbody>                            
-                                </tbody>
-                            </table>
+                <div class="row">
+<!--                    chart group                 -->
+                    <div class="col-lg-2">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Remain Word</h5>
+                            </div>
+                            <div class="ibox-content scroll_table">
+                                <table class="table" id="remain_table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Word</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in remain_list">
+                                            <td>[[index]]</td>
+                                            <td>[[item.kanji]]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>            
 
-                <div class="col-lg-6">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Pie </h5>
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Pie </h5>
 
-                        </div>
-                        <div class="ibox-content">
-                            <div>
-                                <div id="stocked"></div>
+                            </div>
+                            <div class="ibox-content">
+                                <div>
+                                    <div id="stocked"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+<!--                    chart group                 -->
 
-            </div>
+<!--                    main group                 -->
+                <div class="wrapper wrapper-content">
+                    <div class="middle-box text-center animated fadeInRightBig" style="padding-bottom: 40px;margin-top: 0px;padding-top: 0px;">
+                        <p class="font-bold" style="font-size: 70px;">漢字</p>
+                        <div class="bg-primary p-xs b-r-xl " style="font-size: 50px;align-items: center;">
+                            <div>
+                                <label class='main_label_element'>[[words[current_index].kanji_form]]</label>
+                                <div v-if="!is_lock">
+                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].hiragana_form"></div>
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].meaning_form"></div>
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].kanji_meaning_label_value"></div>
+                                    </div>
+                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                        <div id="kanji_explain_2" class="bg-primary p-xs b-r-xl col-md-12" style="font-size: 20px;align-items: center;" v-html="current_kanji.kanji_explain"></div>
+                                    </div>
+                                </div>
 
+                                <div v-if="is_lock">
+                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
+                                        <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
+                                    </div>
+                                    <div class="row" style="margin-left: 0; margin-right: 0">
+                                        <div id="kanji_explain_2" class="bg-primary p-xs b-r-xl col-md-12"
+                                             style="font-size: 20px;align-items: center;"><i class='fa fa-lock'></i></div>
+                                    </div>
+                                </div>
 
-            <div class="wrapper wrapper-content">
-                <div class="middle-box text-center animated fadeInRightBig" style="padding-bottom: 40px;margin-top: 0px;padding-top: 0px;">
-                    <p class="font-bold" style="font-size: 70px;">漢字</p>
-                    <div class="bg-primary p-xs b-r-xl slick_demo_1" style="font-size: 50px;align-items: center;"></div>
-                    <div class="row">
-                        <div id="kanji_label" class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class="fa fa-lock"></i></div>
-                        <div id="meaning_label" class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class="fa fa-lock"></i></div>
-                        <div id="kanji_meaning_label" class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+
+                        </br>
+                        <button v-on:click="back_ward" class="btn btn-primary btn-rounded">BACK WARD</button>
+                        <button v-on:click="next_event" class="btn btn-primary btn-rounded">NEXT</button>
+                        <button v-on:click="show_env" class="btn btn-success btn-rounded">SHOW</button>
+                        <button v-on:click="for_ward" class="btn btn-primary btn-rounded">FOR WARD</button>
                     </div>
-                    <div class="row">
-                        <div id="kanji_explain_2" class="bg-primary p-xs b-r-xl col-md-12" style="font-size: 20px;align-items: center;"><i class="fa fa-lock"></i></div>
-                    </div>
-                    </br>
-                    <button id="next" class="btn btn-primary btn-rounded">NEXT</button>
-                    <button id="show" class="btn btn-success btn-rounded">SHOW</button>
-                    <button id="mark" class="btn btn-warning btn-rounded">MARK</button>
                 </div>
-            </div>
-            <div class="footer">
-                <div class="pull-right">
-                    10GB of <strong>250GB</strong> Free.
-                </div>
-                <div>
-                    <strong>Copyright</strong> Example Company &copy; 2014-2017
-                </div>
-            </div>
+<!--                    main group                 -->
 
+                <div class="footer">
+                    <div class="pull-right">
+                        10GB of <strong>250GB</strong> Free.
+                    </div>
+                    <div>
+                        <strong>Copyright</strong> Example Company &copy; 2014-2017
+                    </div>
+                </div>
+            </div>
         </div>
-        </div>
+    </div>
 
     <!-- Mainly scripts -->
     <script src="{% static 'japan/js/jquery-3.1.1.min.js' %}"></script>
