@@ -131,7 +131,10 @@ function get_kanji_meaning_by_word(code) {
   result =  kanji_json.filter(
       function(kanji_json){ return kanji_json.w == code }
   );
-  if (result.length == 0) {
+  if (code === app.current_kanji.kanji) {
+      return app.current_kanji.kanji_meaning;
+  }
+  else if (result.length == 0) {
       return code;
   } else {
       return " " + result[0].h.split(",")[0] + " "
