@@ -33,7 +33,7 @@ def get_word(request):
         kanji = Kanji.objects.filter(level=current_min_level)
         if kanji.count() == 0:
             return JsonResponse({'is_empty': True, 'alert' : 'Out of kanji'})
-        word_belong_kanji = Word.objects.filter(kanji=kanji[0]).order_by("priority")
+        word_belong_kanji = Word.objects.filter(kanji=kanji[0]).order_by("-priority")
         data = {'kanji': list(kanji.values())[0], 'word': list(word_belong_kanji.values()), 'is_empty': False}
         kanji_first = kanji[0]
         kanji_first.level += 1
