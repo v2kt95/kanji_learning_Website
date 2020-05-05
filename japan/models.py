@@ -6,23 +6,14 @@ from django.db import models
 class Kanji(models.Model):
     kanji = models.CharField(max_length=200)
     kanji_meaning = models.CharField(max_length=200)
-    remember_point = models.IntegerField(default=0)
     strokes = models.IntegerField(default=0)
     level = models.IntegerField(default=1)
-    day_down = models.IntegerField(default=1)
-    day_count = models.IntegerField(default=1)
     kanji_explain = models.CharField(default="", max_length=500, null=True)
+    other_information = models.CharField(default="", max_length=500, blank=True)
+    review_time = models.DateTimeField(null=True, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.strokes <= 5:
-            self.day_down = 8
-        elif self.strokes <= 8:
-            self.day_down = 6
-        elif self.strokes <= 11:
-            self.day_down = 4
-        else:
-            self.day_down = 2
 
     def __str__(self):
         return self.kanji
@@ -34,17 +25,12 @@ class Word(models.Model):
     kanji_form = models.CharField(max_length=200)
     meaning_form = models.CharField(max_length=200)
     priority = models.IntegerField(default=0)
-    remember_score = models.IntegerField(default=0)
 
     def __str__(self):
         return self.kanji_form
 
 
-class TimeReview(models.Model):
-    """docstring for TimeReview"""
-    LastTimeReview = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    NextTimeReview = models.DateTimeField(blank=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.NextTimeReview = self.LastTimeReview + datetime.timedelta(minutes=30)
+class TimeReset(models.Model):
+    next_time = models.DateTimeField(null=True)
+    kanji_list = models.CharField(default="", max_length=500, blank=True)
+    kanji_original_count = models.IntegerField(default=0, blank=True)

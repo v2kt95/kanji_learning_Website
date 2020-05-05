@@ -18,13 +18,17 @@ var app = new Vue({
         remain_list: [],
         swap_quizz_char: [],
         result_quizz_char: [],
+        multiple_choice_answer: [],
+        correct_answer_count: 0,
+        last_kanji: {}
     },
     methods: {
         next_event: function (event) {
+            app.correct_answer_count = 0;
             get_word().then(function(res) {
               app.current_index = 0;
               app.is_lock = true;
-              if (res.is_empty == false) {
+              if (res.is_empty === false) {
                   app.words = res.word;
                   app.current_kanji = res.kanji;
                   app.words[0].kanji_meaning_label_value = get_chinese_by_kanji(app.words[0].kanji_form);
@@ -32,35 +36,23 @@ var app = new Vue({
                   shuffle(app.swap_quizz_char);
                   app.result_quizz_char = [];
               }
-              else{
-                app.words = [{"kanji_form": "終わりましょ"}];
-                app.is_lock = false;
+              else {
+                  app.swap_quizz_char = [];
+                  app.words = [{"kanji_form": "終わりましょ"}];
               }
+
+              get_remain_word().then(function(res) {
+                  app.remain_list = res.result;
+              });
+
+              update_bar_chart();
             }).catch(function(err){
                 console.log(err);
             });
-
-            get_remain_word().then(function(res) {
-                app.remain_list = res.result;
-            });
-
-            update_bar_chart();
-        },
-        back_ward: function (event) {
-            if (app.current_index == 0){
-                app.current_index = app.words.length - 1;
-            }
-            else {
-                app.current_index -= 1;
-            }
-            app.words[app.current_index].kanji_meaning_label_value = get_chinese_by_kanji(app.words[app.current_index].kanji_form);
-
-            app.swap_quizz_char = app.words[app.current_index].hiragana_form.split("");
-            shuffle(app.swap_quizz_char);
-            app.result_quizz_char = [];
         },
         for_ward: function (event) {
-            if (app.current_index == app.words.length - 1){
+            app.is_lock = true;
+            if (app.current_index === app.words.length - 1){
                 app.current_index = 0;
             }
             else {
@@ -71,9 +63,16 @@ var app = new Vue({
             app.swap_quizz_char = app.words[app.current_index].hiragana_form.split("");
             shuffle(app.swap_quizz_char);
             app.result_quizz_char = [];
+            app.multiple_choice_answer = make_shuffle_answer(app.words, app.words[app.current_index]);
         },
-        show_env: function (event) {
-            app.is_lock = !app.is_lock;
+        next_forward_env: function (event) {
+            if (app.current_index === app.words.length - 1){
+                save_kanji_score(app.current_kanji.id, app.correct_answer_count);
+                app.next_event();
+            }
+            else {
+                app.for_ward();
+            }
         },
         select_char: function (index, char) {
             app.result_quizz_char.push({'swap_index': index, 'character': char});
@@ -83,18 +82,43 @@ var app = new Vue({
             app.result_quizz_char.splice(index, 1);
             app.swap_quizz_char.splice( char.swap_index, 0, char.character);
         },
+        select_multiple_choice: function (choice) {
+            if (choice === app.words[app.current_index].hiragana_form) {
+                app.correct_answer_count += 1;
+                app.is_lock = false;
+            }
+            else {
+                app.is_lock = false;
+            }
+        },
     },
     watch: {
         'result_quizz_char': function(newVal) {
             if (newVal.map(i => i.character).join("") === app.words[app.current_index].hiragana_form) {
                 app.is_lock = false;
+                app.correct_answer_count += 1;
             }
         }
     }
 });
 
 function shuffle(array) {
-  array.sort(() => Math.random() - 0.5);
+    array.sort(() => Math.random() - 0.5);
+    return array;
+}
+
+function make_shuffle_answer(words, word) {
+    let tmp_words = words.filter(w => w.kanji_form !== word.kanji_form);
+    let answer_list;
+    if (tmp_words.length >= 3) {
+        answer_list = tmp_words.slice(0, 3);
+    }
+    else {
+        answer_list = tmp_words.slice(0);
+    }
+    answer_list.push(word);
+    answer_list = answer_list.map(x => x.hiragana_form);
+    return shuffle(answer_list)
 }
 
 function get_chinese_by_kanji(kanji) {
@@ -113,17 +137,8 @@ $(document).ready(function(){
 
 $(document).keydown(function(event){
     var keycode = event.which;
-    if(keycode == '13'){
-        app.next_event();
-    }
-    else if(keycode == '32'){
-        app.show_env();
-    }
-    else if(keycode == '37'){
-        app.back_ward();
-    }
-    else if(keycode == '39'){
-        app.for_ward();
+    if(keycode == '13' && !app.is_lock){
+        app.next_forward_env();
     }
 });
 
@@ -145,7 +160,7 @@ function get_word() {
     var deferred = new $.Deferred();
     $.ajax({
         type: 'GET',
-        url: 'get_word2',
+        url: 'get_word',
         success: function(data) {
             deferred.resolve(data);
         },
@@ -173,12 +188,32 @@ function get_statistic_data() {
     return deferred.promise();
 }
 
-function get_remain_word() {
-    priority = $('#priority').is(":checked")
+function save_kanji_score(kanji_id, correct_count) {
     var deferred = new $.Deferred();
     $.ajax({
         type: 'GET',
-        url: 'get_list_remain_word?priority='+priority,
+        url: 'save_kanji_score',
+        data: {
+            id: kanji_id,
+            correct_count: correct_count
+        },
+        success: function(data) {
+            deferred.resolve(data);
+        },
+        error: function(err) {
+            console.log(err);
+            deferred.reject(err);
+        }
+    });
+    return deferred.promise();
+}
+
+
+function get_remain_word() {
+    var deferred = new $.Deferred();
+    $.ajax({
+        type: 'GET',
+        url: 'get_list_remain_word',
         success: function(data) {
             deferred.resolve(data);
         },
@@ -192,17 +227,15 @@ function get_remain_word() {
 
 function update_bar_chart() {
     get_statistic_data().then(function(res){
-    let col = res.result.reduce((acc, daydown_data, index, daydown_datas) => {
-        display_index = index+1;
-        return acc.concat([["day down "+display_index].concat(daydown_data)]);
-    }, []);
+        let result = res['result'];
+        result.unshift('number');
     c3.generate({
         bindto: '#stocked',
         data:{
-            columns: col,
+            columns: [result],
             type: 'bar',
             groups: [
-                ['day down 2', 'day down 4', 'day down 6', 'day down 8']
+                ['number']
             ]
         },
         axis: {

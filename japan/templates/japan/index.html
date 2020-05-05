@@ -99,12 +99,14 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Word</th>
+                                        <th>Level</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(item, index) in remain_list">
-                                            <td>[[index]]</td>
+                                            <td>[[index + 1]]</td>
                                             <td>[[item.kanji]]</td>
+                                            <td>[[item.level]]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -135,11 +137,13 @@
                         <div class="bg-primary p-xs b-r-xl " style="font-size: 50px;align-items: center;">
                             <div>
                                 <label class='main_label_element'>[[words[current_index].kanji_form]]</label>
+
                                 <div class="row make-row-small ">
                                     <div v-on:click="de_select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in result_quizz_char">
                                         [[char.character]]
                                     </div>
                                 </div>
+
                                 <div v-if="!is_lock">
                                     <div class="row make-row-small">
                                         <div class="bg-primary p-xs b-r-xl col-md-4" style="font-size: 20px;align-items: center;" v-html="words[current_index].hiragana_form"></div>
@@ -166,17 +170,23 @@
                             </div>
                         </div>
 
-                        <div class="row make-row-small " style="margin-top: 20px;">
+                        <div v-if="current_index == 0" class="row make-row-small " style="margin-top: 20px;">
                             <div v-on:click="select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in swap_quizz_char">
                                 [[char]]
                             </div>
                         </div>
 
+                        <div v-if="current_index != 0" class="row multiple-choice" style="margin-top: 20px;">
+                            <button v-for="choice in multiple_choice_answer" class="btn btn-primary btn-rounded"
+                            v-bind:disabled="!is_lock" v-on:click="select_multiple_choice(choice)">[[choice]]</button>
+                        </div>
+
                         </br>
-                        <button v-on:click="back_ward" class="btn btn-primary btn-rounded">BACK WARD</button>
-                        <button v-on:click="next_event" class="btn btn-primary btn-rounded">NEXT</button>
-                        <button v-on:click="show_env" class="btn btn-success btn-rounded">SHOW</button>
-                        <button v-on:click="for_ward" class="btn btn-primary btn-rounded">FOR WARD</button>
+                        {% if next_time %}
+                            <button class="btn btn-primary btn-rounded">Next time: {{next_time}}</button>
+                        {% else %}
+                            <button v-on:click="next_forward_env" v-bind:disabled="is_lock" class="btn btn-primary btn-rounded">NEXT</button>
+                        {% endif %}
                     </div>
                 </div>
 <!--                    main group                 -->
@@ -238,8 +248,16 @@
             margin-right: 5px;
             color: black;
             padding-left: 5px;
-            display: inline;
+            display: inline-block;
             cursor: default;
+        }
+        .multiple-choice {
+            display: flex;
+            justify-content: center;
+        }
+        .multiple-choice button{
+            display: inline-block;
+            width: 100%;
         }
     </style>
 
