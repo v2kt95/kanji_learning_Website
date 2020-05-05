@@ -32,5 +32,5 @@ class Word(models.Model):
 
 class TimeReset(models.Model):
     next_time = models.DateTimeField(null=True)
-    kanji_list = models.CharField(default="", max_length=500, blank=True)
+    kanji_list = models.TextField(default="", blank=True)
     kanji_original_count = models.IntegerField(default=0, blank=True)
