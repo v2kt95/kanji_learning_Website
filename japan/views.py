@@ -138,3 +138,17 @@ def get_list_remain_word(request):
         kanji_ids = [int(k) for k in kanji_ids]
         kanji_list = Kanji.objects.filter(pk__in=kanji_ids)
         return JsonResponse({'result': list(kanji_list.values())})
+
+
+def divide_group(request):
+    lv1_kanjis = Kanji.objects.filter(level=1)
+    level = 1
+    for i in range(len(lv1_kanjis)):
+        if i > 75 and i <= 150:
+            lv1_kanjis[i].level = 3
+        elif i > 150:
+            lv1_kanjis[i].level = 4
+        else:
+            lv1_kanjis[i].level = 1
+        lv1_kanjis[i].save()
+    return JsonResponse({'result': 'sucess'})
