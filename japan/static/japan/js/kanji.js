@@ -34,7 +34,7 @@ var app = new Vue({
                   app.words[0].kanji_meaning_label_value = get_chinese_by_kanji(app.words[0].kanji_form);
                   app.swap_quizz_char = app.words[0].hiragana_form.split("");
                   shuffle(app.swap_quizz_char);
-                  app.result_quizz_char = [];
+                  app.result_quizz_char = Array(app.swap_quizz_char.length).fill({swap_index: -1, character: '&#12288'});
               }
               else {
                   app.swap_quizz_char = [];
@@ -75,12 +75,26 @@ var app = new Vue({
             }
         },
         select_char: function (index, char) {
-            app.result_quizz_char.push({'swap_index': index, 'character': char});
-            app.swap_quizz_char.splice(index, 1);
+            if (char !== '&#12288') {
+                let new_index = -1;
+                for (let i = 0; i < app.result_quizz_char.length; i++) {
+                    if (app.result_quizz_char[i].hasOwnProperty('character') && app.result_quizz_char[i].character === '&#12288') {
+                        new_index = i;
+                        break;
+                    }
+                }
+
+                if (new_index !== -1) {
+                    this.$set(this.result_quizz_char, new_index, {'swap_index': index, 'character': char});
+                    this.$set(this.swap_quizz_char, index, '&#12288');
+                }
+            }
         },
         de_select_char: function (index, char) {
-            app.result_quizz_char.splice(index, 1);
-            app.swap_quizz_char.splice( char.swap_index, 0, char.character);
+            if (char !== '&#12288') {
+                this.$set(this.result_quizz_char, index, {'swap_index': -1, 'character': '&#12288'});
+                this.$set(this.swap_quizz_char, char.swap_index, char.character);
+            }
         },
         select_multiple_choice: function (choice) {
             if (choice === app.words[app.current_index].hiragana_form) {

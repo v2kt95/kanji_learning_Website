@@ -139,8 +139,8 @@
                                 <label class='main_label_element'>[[words[current_index].kanji_form]]</label>
 
                                 <div class="row make-row-small ">
-                                    <div v-on:click="de_select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in result_quizz_char">
-                                        [[char.character]]
+                                    <div v-on:click="de_select_char(index, char)" class="square"
+                                         style="font-size: 20px;align-items: center;" v-for="(char, index) in result_quizz_char" v-html="char.character">
                                     </div>
                                 </div>
 
@@ -171,8 +171,8 @@
                         </div>
 
                         <div v-if="current_index == 0" class="row make-row-small " style="margin-top: 20px;">
-                            <div v-on:click="select_char(index, char)" class="square" style="font-size: 20px;align-items: center;" v-for="(char, index) in swap_quizz_char">
-                                [[char]]
+                            <div v-on:click="select_char(index, char)" class="square" style="font-size: 20px;align-items: center;"
+                                 v-for="(char, index) in swap_quizz_char" v-html="char">
                             </div>
                         </div>
 
