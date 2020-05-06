@@ -12,16 +12,17 @@ def index(request):
     time_reset, is_success = TimeReset.objects.get_or_create(pk=1)
     context = {'kanji_list': []}
     if time_reset.next_time is None or time_reset.next_time < datetime.now(timezone.utc):
-        current_min_level = Kanji.objects.order_by("level")[0].level
-        time_now = datetime.now(timezone.utc)
-        review_kanji = Kanji.objects.filter(review_time__gt=time_now)
-        if current_min_level == 5:
-            data = [kanji.id for kanji in review_kanji]
-        else:
-            min_level_kanji = Kanji.objects.filter(level=current_min_level)
-            data = [kanji.id for kanji in min_level_kanji] + [kanji.id for kanji in review_kanji]
-        time_reset.kanji_list = ",".join([str(x) for x in data])
-        time_reset.kanji_original_count = len(data)
+        if time_reset.kanji_list == "":
+            current_min_level = Kanji.objects.order_by("level")[0].level
+            time_now = datetime.now(timezone.utc)
+            review_kanji = Kanji.objects.filter(review_time__gt=time_now)
+            if current_min_level == 5:
+                data = [kanji.id for kanji in review_kanji]
+            else:
+                min_level_kanji = Kanji.objects.filter(level=current_min_level)
+                data = [kanji.id for kanji in min_level_kanji] + [kanji.id for kanji in review_kanji]
+            time_reset.kanji_list = ",".join([str(x) for x in data])
+            time_reset.kanji_original_count = len(data)
     else:
         context = {'kanji_list': [], 'next_time': (time_reset.next_time + timedelta(hours=9)).strftime("%m/%d/%Y, %H:%M:%S")}
         time_reset.kanji_list = ""
